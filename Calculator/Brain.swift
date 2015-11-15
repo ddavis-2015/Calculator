@@ -18,6 +18,10 @@ class Brain
         case Add
         case Subtract
         case SquareRoot
+        case Cosine
+        case Sine
+        case Pi
+        case Negation
 
         var description : String
         {
@@ -33,6 +37,14 @@ class Brain
                 return "−"
             case .SquareRoot:
                 return "√"
+            case .Cosine:
+                return "cos"
+            case .Sine:
+                return "sin"
+            case .Pi:
+                return "π"
+            case .Negation:
+                return "±"
             }
         }
     }
@@ -42,6 +54,7 @@ class Brain
         case Binary(Operation, (Double, Double) -> Double)
         case Unary(Operation, (Double) -> Double)
         case Operand(Double)
+        case Constant(Operation, Double)
 
         func operation() -> Operation?
         {
@@ -49,6 +62,8 @@ class Brain
             {
             case .Operand(_):
                 return nil
+            case .Constant(let operation, _):
+                return operation
             case .Binary(let operation, _):
                 return operation
             case .Unary(let operation, _):
@@ -62,6 +77,8 @@ class Brain
             {
             case .Operand(let operand):
                 return String(operand)
+            case .Constant(let operation, _):
+                return String(operation)
             case.Binary(let operation, _):
                 return String(operation)
             case .Unary(let operation, _):
@@ -80,11 +97,15 @@ class Brain
             self.knownOps[op.operation()!] = op
         }
 
-        addOp(.Binary(.Multiply, { $0 * $1 } ))
-        addOp(.Binary(.Divide, { $1 / $0 } ))
-        addOp(.Binary(.Add, { $0 + $1 } ))
-        addOp(.Binary(.Subtract, { $1 - $0 } ))
+        addOp(.Binary(.Multiply, *))
+        addOp(.Binary(.Divide, /))
+        addOp(.Binary(.Add, +))
+        addOp(.Binary(.Subtract, -))
         addOp(.Unary(.SquareRoot, sqrt))
+        addOp(.Unary(.Cosine, cos))
+        addOp(.Unary(.Sine, sin))
+        addOp(.Constant(.Pi, M_PI))
+        addOp(.Unary(.Negation, { -$0 } ))
     }
 
     private func showStack()
@@ -103,13 +124,15 @@ class Brain
         {
         case .Operand(let operand):
             return (operand, stack)
+        case .Constant(_, let constant):
+            return (constant, stack)
         case .Unary(_, let functor):
             if let (operand, stack) = evaluate(stack)
             {
                 return (functor(operand), stack)
             }
         case .Binary(_, let functor):
-            if let (leftOperand, stack1) = evaluate(stack), (rightOperand, stack2) = evaluate(stack1)
+            if let (rightOperand, stack1) = evaluate(stack), (leftOperand, stack2) = evaluate(stack1)
             {
                 return (functor(leftOperand, rightOperand), stack2)
             }
@@ -118,11 +141,22 @@ class Brain
         return nil
     }
 
+    var stack: String
+    {
+        var result = ""
+
+        for op in opStack
+        {
+            result += String(op) + " "
+        }
+
+        return result
+    }
+
     func evaluate() -> Double?
     {
         let result = evaluate(opStack)
-        opStack = result?.stack ?? opStack
-        print("result:", result?.value ?? " Error")
+        print("result:", result?.value ?? "Error")
         showStack()
         return result?.value
     }
@@ -142,7 +176,7 @@ class Brain
         showStack()
     }
 
-    func clear()
+    func popAll()
     {
         opStack.removeAll()
         showStack()
