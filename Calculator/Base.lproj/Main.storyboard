@@ -45,7 +45,7 @@
                                 <rect key="frame" x="188" y="349" width="48" height="48"/>
                                 <accessibility key="accessibilityConfiguration" label="negation"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <state key="normal" title="±"/>
+                                <state key="normal" title="⁺⁄₋"/>
                                 <connections>
                                     <action selector="functionPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vRE-nh-elz"/>
                                 </connections>
@@ -233,6 +233,10 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4fz-an-nxD">
                                 <rect key="frame" x="132" y="125" width="48" height="48"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <state key="normal" title="M"/>
+                                <connections>
+                                    <action selector="pushMemory" destination="BYZ-38-t0r" eventType="touchUpInside" id="Cdp-Do-hLx"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gv0-sR-q85">
                                 <rect key="frame" x="20" y="125" width="48" height="48"/>
@@ -241,6 +245,10 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hio-lZ-YHV">
                                 <rect key="frame" x="76" y="125" width="48" height="48"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <state key="normal" title="➞M"/>
+                                <connections>
+                                    <action selector="storeMemory" destination="BYZ-38-t0r" eventType="touchUpInside" id="vQh-4a-PGl"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -270,7 +278,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="326" y="747"/>
+            <point key="canvasLocation" x="257" y="554"/>
         </scene>
     </scenes>
 </document>

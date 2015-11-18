@@ -75,23 +75,51 @@ class ViewController: UIViewController
             return
         }
 
+        pushDigitsHolder()
+        brain.pushOperation(operation)
+        evaluate()
+    }
+
+    @IBAction func storeMemory()
+    {
+        if let value = displayValue
+        {
+            brain.userVars["M"] = value
+            digitsHolder.removeAll()
+            evaluate()
+        }
+    }
+
+    @IBAction func pushMemory()
+    {
+        pushDigitsHolder()
+        brain.pushOperand("M")
+        digitsHolder.removeAll()
+        evaluate()
+    }
+
+    func pushDigitsHolder()
+    {
         if !digitsHolder.isEmpty
         {
             brain.pushOperand(Double(digitsHolder)!)
             digitsHolder.removeAll()
         }
-        brain.pushOperation(operation)
+    }
+
+    func evaluate()
+    {
         displayValue = brain.evaluate()
-        historyLabel.text = brain.stack + " ="
+        historyLabel.text = String(brain) + " ="
     }
 
     func clearAll()
     {
         brain.popAll()
+        brain.removeAllUserVars()
         displayValue = 0
-        digitsHolder.removeAll()
-        brain.pushOperand(0)
-        historyLabel.text = brain.stack
+        digitsHolder = "0"
+        historyLabel.text = String(brain)
     }
 
     @IBAction func clearAllPressed()
@@ -110,8 +138,13 @@ class ViewController: UIViewController
             }
             else
             {
-                displayValue = 0
+                displayValue = brain.evaluate()
             }
+        }
+        else
+        {
+            brain.popTop()
+            evaluate()
         }
     }
 
@@ -129,11 +162,14 @@ class ViewController: UIViewController
     {
         if let value = displayValue
         {
-            brain.pushOperand(value)
+            if !digitsHolder.isEmpty || !brain.duplicateTop()
+            {
+                brain.pushOperand(value)
+            }
             displayValue = value // normalize display
         }
         digitsHolder.removeAll()
-        historyLabel.text = brain.stack
+        historyLabel.text = String(brain)
     }
 
     @IBAction func digitPressed(sender: UIButton)
@@ -141,14 +177,7 @@ class ViewController: UIViewController
         let newDigit = String(sender.tag)
         if digitsHolder.characters.first == "0" && !digitsHolder.containsString(".")
         {
-            if newDigit == "0"
-            {
-                return
-            }
-            else
-            {
-                digitsHolder.removeAll()
-            }
+            digitsHolder.removeAll()
         }
 
         digitsHolder += newDigit

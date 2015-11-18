@@ -9,7 +9,31 @@
 import Foundation
 
 
-class Brain
+private func < (lhs: Brain.StackOp.Precedence, rhs: Brain.StackOp.Precedence) -> Bool
+{
+    return lhs.value < rhs.value
+}
+
+private func <= (lhs: Brain.StackOp.Precedence, rhs: Brain.StackOp.Precedence) -> Bool
+{
+    return lhs.value <= rhs.value
+}
+
+infix operator <!= {}
+private func <!= (lhs: Brain.StackOp.Precedence, rhs: Brain.StackOp.Precedence) -> Bool
+{
+    if case .Binary(let lhsValue) = lhs, .Binary(let rhsValue) = rhs where lhsValue != rhsValue
+    {
+        return true
+    }
+    else
+    {
+        return false
+    }
+}
+
+
+class Brain : CustomStringConvertible
 {
     enum Operation : CustomStringConvertible
     {
@@ -44,7 +68,7 @@ class Brain
             case .Pi:
                 return "π"
             case .Negation:
-                return "±"
+                return "-"
             }
         }
     }
@@ -54,20 +78,21 @@ class Brain
         case Binary(Operation, (Double, Double) -> Double)
         case Unary(Operation, (Double) -> Double)
         case Operand(Double)
+        case Variable(String)
         case Constant(Operation, Double)
 
         func operation() -> Operation?
         {
             switch self
             {
-            case .Operand(_):
-                return nil
             case .Constant(let operation, _):
                 return operation
             case .Binary(let operation, _):
                 return operation
             case .Unary(let operation, _):
                 return operation
+            default:
+                return nil
             }
         }
 
@@ -83,12 +108,64 @@ class Brain
                 return String(operation)
             case .Unary(let operation, _):
                 return String(operation)
+            case .Variable(let name):
+                return name
+            }
+        }
+
+        enum Precedence
+        {
+            case Operand(Int)
+            case Constant(Int)
+            case Unary(Int)
+            case Binary(Int)
+            case Variable(Int)
+
+            var value: Int
+            {
+                switch self
+                {
+                case .Binary(let value):
+                    return value
+                case .Constant(let value):
+                    return value
+                case .Operand(let value):
+                    return value
+                case .Unary(let value):
+                    return value
+                case .Variable(let value):
+                    return value
+                }
+            }
+        }
+
+        var precedence: Precedence
+        {
+            switch self
+            {
+            case .Operand:
+                return Precedence.Operand(70)
+            case .Constant:
+                return Precedence.Constant(70)
+            case .Variable:
+                return Precedence.Variable(70)
+            case .Unary(let operation, _) where operation == .Negation:
+                return Precedence.Unary(60)
+            case .Unary:
+                return Precedence.Unary(100)
+            case .Binary(let operation, _) where [.Add, .Subtract].contains(operation):
+                return Precedence.Binary(40)
+            case .Binary(let operation, _) where [.Multiply, .Divide].contains(operation):
+                return Precedence.Binary(50)
+            default:
+                return Precedence.Operand(0)
             }
         }
     }
 
     private var opStack = [StackOp]()
     private var knownOps = [Operation : StackOp]()
+    var userVars = [String: Double]()
 
     init()
     {
@@ -136,21 +213,67 @@ class Brain
             {
                 return (functor(leftOperand, rightOperand), stack2)
             }
+        case .Variable(let name):
+            if let value = userVars[name]
+            {
+                return (value, stack)
+            }
         }
 
         return nil
     }
 
-    var stack: String
+    private lazy var formatter : NSNumberFormatter =
     {
-        var result = ""
+        let f = NSNumberFormatter()
+        f.numberStyle = NSNumberFormatterStyle.DecimalStyle
+        f.maximumFractionDigits = 6
+        return f
+    }()
 
-        for op in opStack
+    private func evaluate2(var stack: [StackOp]) -> (expr: String, stack: [StackOp], precedence: StackOp.Precedence)
+    {
+
+        guard let op = stack.popLast() else
         {
-            result += String(op) + " "
+            return ("?", stack, StackOp.Precedence.Operand(0))
         }
 
-        return result
+        switch op
+        {
+        case .Operand(let operand):
+            return (formatter.stringFromNumber(operand)!, stack, op.precedence)
+
+        case .Constant(let operation, _):
+            return (String(operation), stack, op.precedence)
+
+        case .Unary(let operation, _):
+            var (expr, stack, operandPrecedence) = evaluate2(stack)
+            let precedence = op.precedence
+            if operandPrecedence <= precedence
+            {
+                expr = "(" + expr + ")"
+            }
+            return (String(operation) + expr, stack, precedence)
+
+        case .Binary(let operation, _):
+            var (rightOperand, stack1, rightPrecedence) = evaluate2(stack)
+            var (leftOperand, stack2, leftPrecedence) = evaluate2(stack1)
+            let precedence = op.precedence
+            if rightPrecedence <!= precedence
+            {
+                rightOperand = "(" + rightOperand + ")"
+            }
+            if leftPrecedence <!= precedence
+            {
+                leftOperand = "(" + leftOperand + ")"
+            }
+            let expr = [leftOperand, String(operation), rightOperand].joinWithSeparator(" ")
+            return (expr, stack2, precedence)
+
+        case .Variable(let name):
+            return (name, stack, op.precedence)
+        }
     }
 
     func evaluate() -> Double?
@@ -176,9 +299,59 @@ class Brain
         showStack()
     }
 
+    func pushOperand(operand: String)
+    {
+        opStack.append(.Variable(operand))
+        showStack()
+    }
+
+    func duplicateTop() -> Bool
+    {
+        guard let op = opStack.last else
+        {
+            return false
+        }
+
+        switch op
+        {
+        case .Operand(_), .Constant(_, _):
+            opStack.append(op)
+            showStack()
+            return true
+        default:
+            return false
+        }
+    }
+
+    func popTop()
+    {
+        opStack.popLast()
+        showStack()
+    }
+
     func popAll()
     {
         opStack.removeAll()
         showStack()
     }
+
+    func removeAllUserVars()
+    {
+        userVars.removeAll()
+    }
+
+    var description : String
+    {
+        var (result, stack, _) = evaluate2(opStack)
+
+        while !stack.isEmpty
+        {
+            let (expr, stack1, _) = evaluate2(stack)
+            stack = stack1
+            result = expr + ", " + result
+        }
+
+        return result
+    }
 }
+
