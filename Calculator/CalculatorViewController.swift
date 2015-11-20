@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CalculatorViewController.swift
 //  Calculator
 //
 //  Created by David Davis on 11/12/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController
+class CalculatorViewController: UIViewController
 {
 
     @IBOutlet weak var displayLabel: UILabel!
@@ -189,6 +189,7 @@ class ViewController: UIViewController
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         clearAll()
+        loadProgram()
     }
 
     override func didReceiveMemoryWarning()
@@ -196,5 +197,43 @@ class ViewController: UIViewController
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+    private static let PROGRAM_KEY_NAME = "Program"
+
+    private func loadProgram()
+    {
+        if let program = NSUserDefaults.standardUserDefaults().objectForKey(CalculatorViewController.PROGRAM_KEY_NAME)
+        {
+            brain.program = program
+            evaluate()
+            if displayValue != nil
+            {
+                digitsHolder.removeAll()
+            }
+        }
+    }
+
+    func saveProgram()
+    {
+        NSUserDefaults.standardUserDefaults().setObject(
+            brain.program,
+            forKey: CalculatorViewController.PROGRAM_KEY_NAME
+        )
+        assert(NSUserDefaults.standardUserDefaults().synchronize(), "NSUserDefaults synchronize failed")
+    }
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    {
+        if segue.identifier == "graph", let gvc = segue.destinationViewController as? GraphViewController
+        {
+            gvc.program = brain.program
+        }
+    }
+
+    override func viewWillAppear(animated: Bool)
+    {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
 }
+
 

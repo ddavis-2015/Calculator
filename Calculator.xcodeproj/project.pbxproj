@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4D5ECC4B1BF563B000CD59A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5ECC4A1BF563B000CD59A4 /* AppDelegate.swift */; };
-		4D5ECC4D1BF563B000CD59A4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5ECC4C1BF563B000CD59A4 /* ViewController.swift */; };
+		4D5ECC4D1BF563B000CD59A4 /* CalculatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5ECC4C1BF563B000CD59A4 /* CalculatorViewController.swift */; };
 		4D5ECC501BF563B000CD59A4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D5ECC4E1BF563B000CD59A4 /* Main.storyboard */; };
 		4D5ECC521BF563B000CD59A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D5ECC511BF563B000CD59A4 /* Assets.xcassets */; };
 		4D5ECC551BF563B000CD59A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D5ECC531BF563B000CD59A4 /* LaunchScreen.storyboard */; };
@@ -16,6 +16,9 @@
 		4D5ECC6B1BF563B100CD59A4 /* CalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5ECC6A1BF563B100CD59A4 /* CalculatorUITests.swift */; };
 		4D5ECC791BF5680900CD59A4 /* Brain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5ECC781BF5680900CD59A4 /* Brain.swift */; };
 		4D5ECC7A1BF5680900CD59A4 /* Brain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5ECC781BF5680900CD59A4 /* Brain.swift */; };
+		4D5ECC7C1BFE038600CD59A4 /* GraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5ECC7B1BFE038600CD59A4 /* GraphViewController.swift */; };
+		4D5ECC7E1BFE03A800CD59A4 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5ECC7D1BFE03A800CD59A4 /* GraphView.swift */; };
+		4D942AF71BFEADBA00CC9E6B /* CalculatorSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D942AF61BFEADBA00CC9E6B /* CalculatorSplitViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +41,7 @@
 /* Begin PBXFileReference section */
 		4D5ECC471BF563B000CD59A4 /* Calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D5ECC4A1BF563B000CD59A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4D5ECC4C1BF563B000CD59A4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		4D5ECC4C1BF563B000CD59A4 /* CalculatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorViewController.swift; sourceTree = "<group>"; };
 		4D5ECC4F1BF563B000CD59A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4D5ECC511BF563B000CD59A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4D5ECC541BF563B000CD59A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -50,6 +53,9 @@
 		4D5ECC6A1BF563B100CD59A4 /* CalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorUITests.swift; sourceTree = "<group>"; };
 		4D5ECC6C1BF563B100CD59A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D5ECC781BF5680900CD59A4 /* Brain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Brain.swift; sourceTree = "<group>"; };
+		4D5ECC7B1BFE038600CD59A4 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphViewController.swift; sourceTree = "<group>"; };
+		4D5ECC7D1BFE03A800CD59A4 /* GraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
+		4D942AF61BFEADBA00CC9E6B /* CalculatorSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorSplitViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,12 +107,15 @@
 			isa = PBXGroup;
 			children = (
 				4D5ECC4A1BF563B000CD59A4 /* AppDelegate.swift */,
-				4D5ECC4C1BF563B000CD59A4 /* ViewController.swift */,
+				4D5ECC4C1BF563B000CD59A4 /* CalculatorViewController.swift */,
 				4D5ECC4E1BF563B000CD59A4 /* Main.storyboard */,
 				4D5ECC511BF563B000CD59A4 /* Assets.xcassets */,
 				4D5ECC531BF563B000CD59A4 /* LaunchScreen.storyboard */,
 				4D5ECC561BF563B000CD59A4 /* Info.plist */,
 				4D5ECC781BF5680900CD59A4 /* Brain.swift */,
+				4D5ECC7B1BFE038600CD59A4 /* GraphViewController.swift */,
+				4D5ECC7D1BFE03A800CD59A4 /* GraphView.swift */,
+				4D942AF61BFEADBA00CC9E6B /* CalculatorSplitViewController.swift */,
 			);
 			path = Calculator;
 			sourceTree = "<group>";
@@ -261,9 +270,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D5ECC4D1BF563B000CD59A4 /* ViewController.swift in Sources */,
+				4D5ECC7E1BFE03A800CD59A4 /* GraphView.swift in Sources */,
+				4D5ECC4D1BF563B000CD59A4 /* CalculatorViewController.swift in Sources */,
+				4D5ECC7C1BFE038600CD59A4 /* GraphViewController.swift in Sources */,
 				4D5ECC791BF5680900CD59A4 /* Brain.swift in Sources */,
 				4D5ECC4B1BF563B000CD59A4 /* AppDelegate.swift in Sources */,
+				4D942AF71BFEADBA00CC9E6B /* CalculatorSplitViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -495,6 +507,7 @@
 				4D5ECC711BF563B100CD59A4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4D5ECC721BF563B100CD59A4 /* Build configuration list for PBXNativeTarget "CalculatorTests" */ = {
 			isa = XCConfigurationList;
@@ -503,6 +516,7 @@
 				4D5ECC741BF563B100CD59A4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4D5ECC751BF563B100CD59A4 /* Build configuration list for PBXNativeTarget "CalculatorUITests" */ = {
 			isa = XCConfigurationList;
@@ -511,6 +525,7 @@
 				4D5ECC771BF563B100CD59A4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

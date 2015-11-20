@@ -353,5 +353,127 @@ class Brain : CustomStringConvertible
 
         return result
     }
+
+    typealias PropertyList = AnyObject
+    private static let userVarsName = "userVariables"
+    private static let stackName = "stack"
+    private static let variableName = "Variable"
+    private static let operandName = "Operand"
+    private static let operationName = "Operation"
+    private static let operationNames: [Operation : String] =
+    [
+        Operation.Negation: "Negation",
+        Operation.Add: "Addition",
+        Operation.Subtract: "Subtraction",
+        Operation.Divide: "Division",
+        Operation.Multiply: "Multiplication",
+        Operation.Cosine: "Cosine",
+        Operation.Sine: "Sine",
+        Operation.Pi: "Pi",
+        Operation.SquareRoot: "Square Root",
+    ]
+
+    var program: PropertyList
+    {
+        get
+        {
+            let propList = NSMutableDictionary()
+            propList.setObject(userVars, forKey: Brain.userVarsName)
+
+            let stack = NSMutableArray()
+            for op in opStack
+            {
+                switch op
+                {
+                case .Operand(let value):
+                    stack.addObject([Brain.operandName : String(value)])
+                case .Variable(let name):
+                    stack.addObject([Brain.variableName : name])
+                default:
+                    if let operation = op.operation(), name = Brain.operationNames[operation]
+                    {
+                        stack.addObject([Brain.operationName : name])
+                    }
+                    else
+                    {
+                        print("program: unknown StackOp:", String(op))
+                    }
+                }
+            }
+            propList.setObject(stack, forKey: Brain.stackName)
+
+            return propList
+        }
+
+        set (pList)
+        {
+            guard let propList = pList as? NSDictionary else
+            {
+                print("program: not a PropertyList: \(pList)")
+                return
+            }
+            guard let vars = propList[Brain.userVarsName] as? [String : Double] else
+            {
+                print("program: invalid property \(Brain.userVarsName): \(propList[Brain.userVarsName])")
+                return
+            }
+            guard let stack = propList[Brain.stackName] as? [[String : String]] else
+            {
+                print("program: invalid property \(Brain.stackName): \(propList[Brain.stackName])")
+                return
+            }
+
+            var newStack = [StackOp]()
+
+            for dict in stack
+            {
+                for (key, value) in dict
+                {
+                    switch key
+                    {
+                    case Brain.variableName:
+                        newStack.append(StackOp.Variable(value))
+                    case Brain.operandName:
+                        if let newValue = Double(value)
+                        {
+                            newStack.append(StackOp.Operand(newValue))
+                        }
+                        else
+                        {
+                            print("program: bad operand value: \(value)")
+                            return
+                        }
+                    case Brain.operationName:
+                        if !Brain.operationNames.values.contains(value)
+                        {
+                            print("program: bad operation value: \(value)")
+                            return
+                        }
+                        for (operation, name) in Brain.operationNames where name == value
+                        {
+                            if let op = knownOps[operation]
+                            {
+                                newStack.append(op)
+                                break
+                            }
+                            else
+                            {
+                                print("program: unknown stackOp: \(String(operation))")
+                                return
+                            }
+                        }
+                    default:
+                        print("program: unknown op: \(dict)")
+                        return
+                    }
+
+                    break
+                }
+            }
+
+            userVars = vars
+            opStack = newStack
+        }
+    }
 }
 
