@@ -29,13 +29,13 @@ class GraphView: UIView
         {
             let ratio = bounds.width / bounds.height
             scaleRect = CGRectMake(-scale * ratio, -scale, scale * 2 * ratio, scale * 2)
-            scaleRect.offsetInPlace(dx: -origin.x * ratio, dy: -origin.y)
+            scaleRect.offsetInPlace(dx: -origin.x, dy: -origin.y)
         }
         else
         {
             let ratio = bounds.height / bounds.width
             scaleRect = CGRectMake(-scale, -scale * ratio, scale * 2, scale * 2 * ratio)
-            scaleRect.offsetInPlace(dx: -origin.x, dy: -origin.y * ratio)
+            scaleRect.offsetInPlace(dx: -origin.x, dy: -origin.y)
         }
         let xIncr = scaleRect.width / bounds.width
         let yIncr = scaleRect.height / bounds.height
