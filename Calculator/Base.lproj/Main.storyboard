@@ -462,6 +462,15 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="scale">
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="majorDivisions">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="point" keyPath="origin">
+                                        <point key="value" x="0.0" y="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="minorDivisions">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="Fd3-tb-YnL" appends="YES" id="3gd-SL-PeJ"/>
@@ -484,9 +493,21 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jKD-w2-UK4" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="Fd3-tb-YnL"/>
-                <pinchGestureRecognizer id="gHM-JM-58c"/>
-                <tapGestureRecognizer numberOfTapsRequired="2" id="SyE-ad-su6"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="Fd3-tb-YnL">
+                    <connections>
+                        <action selector="panAction:" destination="hM1-6L-wbh" id="kK0-1E-HfM"/>
+                    </connections>
+                </panGestureRecognizer>
+                <pinchGestureRecognizer id="gHM-JM-58c">
+                    <connections>
+                        <action selector="pinchAction:" destination="hM1-6L-wbh" id="qxh-ll-N62"/>
+                    </connections>
+                </pinchGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="SyE-ad-su6">
+                    <connections>
+                        <action selector="tapAction:" destination="hM1-6L-wbh" id="IYj-Gy-GsM"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-2602" y="619"/>
         </scene>

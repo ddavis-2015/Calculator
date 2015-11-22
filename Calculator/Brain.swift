@@ -187,7 +187,7 @@ class Brain : CustomStringConvertible
 
     private func showStack()
     {
-        print("stack:", opStack)
+        //print("stack:", opStack)
     }
 
     private func evaluate(var stack: [StackOp]) -> (value: Double, stack: [StackOp])?
@@ -279,7 +279,7 @@ class Brain : CustomStringConvertible
     func evaluate() -> Double?
     {
         let result = evaluate(opStack)
-        print("result:", result?.value ?? "Error")
+        //print("result:", result?.value ?? "Error")
         showStack()
         return result?.value
     }

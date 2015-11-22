@@ -17,8 +17,7 @@ class GraphViewController: UIViewController, GraphViewDataSource
     {
         super.viewDidLoad()
         graphView.dataSource = self
-
-        // Do any additional setup after loading the view.
+        graphView.scale = 4
     }
 
     override func didReceiveMemoryWarning()
@@ -48,10 +47,95 @@ class GraphViewController: UIViewController, GraphViewDataSource
         }
     }
 
-    func xForY(x: Double) -> Double?
+    func yForX(x: Double) -> Double?
     {
         brain.userVars["M"] = x
         return brain.evaluate()
+    }
+
+    private var scaleVector : CGVector
+    {
+        let xRatio : CGFloat
+        let yRatio : CGFloat
+        if graphView.bounds.width < graphView.bounds.height
+        {
+            xRatio = 1.0
+            yRatio = graphView.bounds.height / graphView.bounds.width
+        }
+        else
+        {
+            xRatio = graphView.bounds.width / graphView.bounds.height
+            yRatio = 1.0
+        }
+        let dx = graphView.bounds.width / (graphView.scale * 2 * xRatio)
+        let dy = graphView.bounds.height / (graphView.scale * 2 * yRatio)
+        return CGVectorMake(dx, dy)
+    }
+
+    private func viewPositionToGraphOrigin(var position: CGPoint) -> CGPoint
+    {
+        position.x -= graphView.bounds.midX
+        position.y -= graphView.bounds.midY
+        let scaleVector = self.scaleVector
+        position.x /= scaleVector.dx
+        position.y /= scaleVector.dy
+        return position
+    }
+
+    @IBAction func pinchAction(sender: UIPinchGestureRecognizer)
+    {
+        switch sender.state
+        {
+        case .Began:
+            fallthrough
+        case .Changed:
+            if graphView.scale <= 1
+            {
+                var scale = graphView.scale
+                scale *= sender.velocity < 0 ? 1.25 : 0.8
+                if scale > 1
+                {
+                    scale = ceil(scale)
+                }
+                graphView.scale = scale
+            }
+            else
+            {
+                graphView.scale += sender.velocity < 0 ? 1 : -1
+            }
+        default:
+            break
+        }
+    }
+
+    @IBAction func tapAction(sender: UITapGestureRecognizer)
+    {
+        switch sender.state
+        {
+        case .Ended:
+            graphView.origin = viewPositionToGraphOrigin(sender.locationInView(graphView))
+        default:
+            break
+        }
+    }
+
+    @IBAction func panAction(sender: UIPanGestureRecognizer)
+    {
+        switch sender.state
+        {
+        case .Began:
+            fallthrough
+        case .Changed:
+            var newPosition = sender.translationInView(graphView)
+            let scaleVector = self.scaleVector
+            newPosition.x /= scaleVector.dx
+            newPosition.y /= scaleVector.dy
+            let origin = graphView.origin
+            graphView.origin = CGPointMake(origin.x + newPosition.x, origin.y + newPosition.y)
+            sender.setTranslation(CGPointZero, inView: graphView)
+        default:
+            break
+        }
     }
 }
 
