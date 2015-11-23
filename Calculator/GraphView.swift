@@ -52,7 +52,7 @@ class GraphView: UIView
 
         let bp = UIBezierPath()
         var startOfLine = true
-        for var x = scaleRect.minX; x < scaleRect.maxX + xIncr; x += xIncr
+        for var x = scaleRect.minX; x < scaleRect.maxX + xIncr; x += xIncr * 3
         {
             if let y = dataSource!.yForX(Double(x)) where y.isNormal || y.isZero
             {

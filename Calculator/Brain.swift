@@ -190,7 +190,7 @@ class Brain : CustomStringConvertible
         //print("stack:", opStack)
     }
 
-    private func evaluate(var stack: [StackOp]) -> (value: Double, stack: [StackOp])?
+    private func evaluate3(inout stack: [StackOp]) -> Double?
     {
         guard let op = stack.popLast() else
         {
@@ -200,23 +200,23 @@ class Brain : CustomStringConvertible
         switch op
         {
         case .Operand(let operand):
-            return (operand, stack)
+            return operand
         case .Constant(_, let constant):
-            return (constant, stack)
+            return constant
         case .Unary(_, let functor):
-            if let (operand, stack) = evaluate(stack)
+            if let operand = evaluate3(&stack)
             {
-                return (functor(operand), stack)
+                return functor(operand)
             }
         case .Binary(_, let functor):
-            if let (rightOperand, stack1) = evaluate(stack), (leftOperand, stack2) = evaluate(stack1)
+            if let rightOperand = evaluate3(&stack), leftOperand = evaluate3(&stack)
             {
-                return (functor(leftOperand, rightOperand), stack2)
+                return functor(leftOperand, rightOperand)
             }
         case .Variable(let name):
             if let value = userVars[name]
             {
-                return (value, stack)
+                return value
             }
         }
 
@@ -278,10 +278,11 @@ class Brain : CustomStringConvertible
 
     func evaluate() -> Double?
     {
-        let result = evaluate(opStack)
+        var copy = opStack
+        let result = evaluate3(&copy)
         //print("result:", result?.value ?? "Error")
         showStack()
-        return result?.value
+        return result
     }
 
     func pushOperation(operation: Operation)
