@@ -42,9 +42,4 @@ class GraphDetailViewController: UIViewController
         label.sizeToFit()
         preferredContentSize = CGSizeMake(label.bounds.width + 10, label.bounds.height + 10)
     }
-
-    @IBAction func donePressed(sender: UIBarButtonItem)
-    {
-        presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
-    }
 }

@@ -444,7 +444,7 @@
             </objects>
             <point key="canvasLocation" x="-3354" y="-173"/>
         </scene>
-        <!--Scale Details-->
+        <!--Graph Detail View Controller-->
         <scene sceneID="xTf-XI-j1r">
             <objects>
                 <viewController id="4yt-VH-9fe" customClass="GraphDetailViewController" customModule="Calculator" customModuleProvider="target" sceneMemberID="viewController">
@@ -458,13 +458,12 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scale X: -1000.00 to -5000.00 Scale Y: -2000.55 to -8000.55   Units/Major Div.: 100.00 Units/Minor Div.: 50.00" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="24S-xF-IZm">
                                 <rect key="frame" x="169" y="256" width="262" height="88"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="15"/>
                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.43844121400000002" green="0.68795388099999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="24S-xF-IZm" firstAttribute="centerY" secondItem="era-ld-1Fp" secondAttribute="centerY" id="4hx-ie-bw2"/>
                             <constraint firstItem="24S-xF-IZm" firstAttribute="centerX" secondItem="era-ld-1Fp" secondAttribute="centerX" id="CBH-Vq-eiu"/>
@@ -482,13 +481,6 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="Scale Details" id="GII-aB-BIv">
-                        <barButtonItem key="rightBarButtonItem" title="Done" id="OUr-Q9-yfp">
-                            <connections>
-                                <action selector="donePressed:" destination="4yt-VH-9fe" id="yJK-hr-hGs"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
                     <connections>
                         <outlet property="label" destination="24S-xF-IZm" id="xt1-9J-KMT"/>
                     </connections>
@@ -545,7 +537,7 @@
                     <navigationItem key="navigationItem" title="graph program here" id="LcU-QY-lBg">
                         <barButtonItem key="rightBarButtonItem" title="Scale" id="4t7-rC-KhG">
                             <connections>
-                                <segue destination="S2M-rZ-ykH" kind="popoverPresentation" identifier="graph detail" popoverAnchorBarButtonItem="4t7-rC-KhG" id="tp8-Bd-en7">
+                                <segue destination="4yt-VH-9fe" kind="popoverPresentation" identifier="graph detail" popoverAnchorBarButtonItem="4t7-rC-KhG" id="kyV-8f-wrJ">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                 </segue>
                             </connections>
@@ -572,7 +564,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1800" y="655"/>
+            <point key="canvasLocation" x="-2612" y="655"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="eaO-Az-qvG">
@@ -606,25 +598,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7AB-SX-m4g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1014" y="655"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="w8w-in-VpV">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="S2M-rZ-ykH" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Yd0-PB-XXj">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="4yt-VH-9fe" kind="relationship" relationship="rootViewController" id="j4R-Vf-2oc"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="JXF-uG-OMH" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-2612" y="655"/>
+            <point key="canvasLocation" x="-1826" y="655"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

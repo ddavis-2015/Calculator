@@ -9,7 +9,7 @@
 import UIKit
 
 
-class GraphViewController: UIViewController, GraphViewDataSource
+class GraphViewController: UIViewController, GraphViewDataSource, UIPopoverPresentationControllerDelegate
 {
     @IBOutlet weak var graphView: GraphView!
 
@@ -140,15 +140,9 @@ class GraphViewController: UIViewController, GraphViewDataSource
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
     {
         if segue.identifier == "graph detail",
-            let nvc = segue.destinationViewController as? UINavigationController,
-            let gdvc = nvc.topViewController as? GraphDetailViewController
+            let gdvc = segue.destinationViewController as? GraphDetailViewController
         {
-
-            if traitCollection.horizontalSizeClass != UIUserInterfaceSizeClass.Compact
-            {
-                gdvc.navigationController?.setNavigationBarHidden(true, animated: false)
-                gdvc.view.backgroundColor = UIColor.clearColor()
-            }
+            gdvc.popoverPresentationController?.delegate = self
 
             var rect = graphView.scaleRect
             rect.origin.y = -rect.origin.y
@@ -157,6 +151,11 @@ class GraphViewController: UIViewController, GraphViewDataSource
             gdvc.majorDivisionScale = Double(graphView.majorDivisionScale)
             gdvc.minorDivisionScale = Double(graphView.minorDivisionScale)
         }
+    }
+
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle
+    {
+        return UIModalPresentationStyle.None
     }
 }
 
