@@ -190,7 +190,7 @@ class Brain : CustomStringConvertible
         //print("stack:", opStack)
     }
 
-    private func evaluate3(inout stack: [StackOp]) -> Double?
+    private func evaluate3(inout stack: [StackOp], _ singleVariant: Double?) -> Double?
     {
         guard let op = stack.popLast() else
         {
@@ -204,16 +204,20 @@ class Brain : CustomStringConvertible
         case .Constant(_, let constant):
             return constant
         case .Unary(_, let functor):
-            if let operand = evaluate3(&stack)
+            if let operand = evaluate3(&stack, singleVariant)
             {
                 return functor(operand)
             }
         case .Binary(_, let functor):
-            if let rightOperand = evaluate3(&stack), leftOperand = evaluate3(&stack)
+            if let rightOperand = evaluate3(&stack, singleVariant), leftOperand = evaluate3(&stack, singleVariant)
             {
                 return functor(leftOperand, rightOperand)
             }
         case .Variable(let name):
+            if let value = singleVariant
+            {
+                return value
+            }
             if let value = userVars[name]
             {
                 return value
@@ -276,10 +280,10 @@ class Brain : CustomStringConvertible
         }
     }
 
-    func evaluate() -> Double?
+    func evaluate(singleVariant: Double? = nil) -> Double?
     {
         var copy = opStack
-        let result = evaluate3(&copy)
+        let result = evaluate3(&copy, singleVariant)
         //print("result:", result?.value ?? "Error")
         showStack()
         return result

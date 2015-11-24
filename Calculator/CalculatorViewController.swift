@@ -224,7 +224,7 @@ class CalculatorViewController: UIViewController
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
     {
-        if segue.identifier == "graph", let gvc = segue.destinationViewController as? GraphViewController
+        if segue.identifier == "graph", let gvc = (segue.destinationViewController as? UINavigationController)?.topViewController as? GraphViewController
         {
             gvc.program = brain.program
         }

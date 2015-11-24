@@ -24,19 +24,6 @@ class GraphView: UIView
         // Drawing code
         super.drawRect(rect)
 
-        var scaleRect : CGRect
-        if bounds.width > bounds.height
-        {
-            let ratio = bounds.width / bounds.height
-            scaleRect = CGRectMake(-scale * ratio, -scale, scale * 2 * ratio, scale * 2)
-            scaleRect.offsetInPlace(dx: -origin.x, dy: -origin.y)
-        }
-        else
-        {
-            let ratio = bounds.height / bounds.width
-            scaleRect = CGRectMake(-scale, -scale * ratio, scale * 2, scale * 2 * ratio)
-            scaleRect.offsetInPlace(dx: -origin.x, dy: -origin.y)
-        }
         let xIncr = scaleRect.width / bounds.width
         let yIncr = scaleRect.height / bounds.height
 
@@ -52,11 +39,13 @@ class GraphView: UIView
 
         let bp = UIBezierPath()
         var startOfLine = true
-        for var x = scaleRect.minX; x < scaleRect.maxX + xIncr; x += xIncr * 3
+        let minX = bounds.minX
+        let maxX = bounds.maxX
+        for var viewX = minX; viewX <= maxX; viewX += 1 / (contentScaleFactor * 2)
         {
+            let x = (viewX - originInView.x) * xIncr
             if let y = dataSource!.yForX(Double(x)) where y.isNormal || y.isZero
             {
-                let viewX = (x / xIncr) + originInView.x
                 let viewY = (CGFloat(-y) / yIncr) + originInView.y
                 let p = CGPointMake(viewX, viewY)
 
@@ -78,6 +67,28 @@ class GraphView: UIView
 
         bp.lineWidth = 3
         bp.stroke()
+    }
+
+    // scaleRect is in the infinite coordinate space
+    var scaleRect : CGRect
+    {
+        get
+        {
+            var rect : CGRect
+            if bounds.width > bounds.height
+            {
+                let ratio = bounds.width / bounds.height
+                rect = CGRectMake(-scale * ratio, -scale, scale * 2 * ratio, scale * 2)
+                rect.offsetInPlace(dx: -origin.x, dy: -origin.y)
+            }
+            else
+            {
+                let ratio = bounds.height / bounds.width
+                rect = CGRectMake(-scale, -scale * ratio, scale * 2, scale * 2 * ratio)
+                rect.offsetInPlace(dx: -origin.x, dy: -origin.y)
+            }
+            return rect
+        }
     }
 
     // scale is in the infinite coordinate space
@@ -129,11 +140,37 @@ class GraphView: UIView
         }
     }
 
+    // majorDivisionScale is in the infinite coordinate space
+    var majorDivisionScale : CGFloat
+    {
+        get
+        {
+            if bounds.height > bounds.width
+            {
+                return scaleRect.width / CGFloat(majorDivisions + 1)
+            }
+            else
+            {
+                return scaleRect.height / CGFloat(majorDivisions + 1)
+            }
+        }
+    }
+
+    // minorDivisionScale is in the infinite coordinate space
+    var minorDivisionScale : CGFloat
+    {
+        get
+        {
+            return majorDivisionScale / CGFloat(minorDivisions + 1)
+        }
+    }
+
     var dataSource : GraphViewDataSource?
 
     func drawAxes(originInViewCoords origin: CGPoint)
     {
         let bp = UIBezierPath()
+
 
         let majorDivIncr : CGFloat
         let minorDivIncr : CGFloat

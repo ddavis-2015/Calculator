@@ -19,6 +19,7 @@
 		4D5ECC7C1BFE038600CD59A4 /* GraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5ECC7B1BFE038600CD59A4 /* GraphViewController.swift */; };
 		4D5ECC7E1BFE03A800CD59A4 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5ECC7D1BFE03A800CD59A4 /* GraphView.swift */; };
 		4D942AF71BFEADBA00CC9E6B /* CalculatorSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D942AF61BFEADBA00CC9E6B /* CalculatorSplitViewController.swift */; };
+		4D942AF91C02ABCC00CC9E6B /* GraphDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D942AF81C02ABCC00CC9E6B /* GraphDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		4D5ECC7B1BFE038600CD59A4 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphViewController.swift; sourceTree = "<group>"; };
 		4D5ECC7D1BFE03A800CD59A4 /* GraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
 		4D942AF61BFEADBA00CC9E6B /* CalculatorSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorSplitViewController.swift; sourceTree = "<group>"; };
+		4D942AF81C02ABCC00CC9E6B /* GraphDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 				4D5ECC7B1BFE038600CD59A4 /* GraphViewController.swift */,
 				4D5ECC7D1BFE03A800CD59A4 /* GraphView.swift */,
 				4D942AF61BFEADBA00CC9E6B /* CalculatorSplitViewController.swift */,
+				4D942AF81C02ABCC00CC9E6B /* GraphDetailViewController.swift */,
 			);
 			path = Calculator;
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D5ECC7E1BFE03A800CD59A4 /* GraphView.swift in Sources */,
+				4D942AF91C02ABCC00CC9E6B /* GraphDetailViewController.swift in Sources */,
 				4D5ECC4D1BF563B000CD59A4 /* CalculatorViewController.swift in Sources */,
 				4D5ECC7C1BFE038600CD59A4 /* GraphViewController.swift in Sources */,
 				4D5ECC791BF5680900CD59A4 /* Brain.swift in Sources */,

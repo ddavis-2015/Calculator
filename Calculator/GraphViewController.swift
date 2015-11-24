@@ -49,8 +49,7 @@ class GraphViewController: UIViewController, GraphViewDataSource
 
     func yForX(x: Double) -> Double?
     {
-        brain.userVars["M"] = x
-        return brain.evaluate()
+        return brain.evaluate(x)
     }
 
     private var scaleVector : CGVector
@@ -135,6 +134,28 @@ class GraphViewController: UIViewController, GraphViewDataSource
             sender.setTranslation(CGPointZero, inView: graphView)
         default:
             break
+        }
+    }
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    {
+        if segue.identifier == "graph detail",
+            let nvc = segue.destinationViewController as? UINavigationController,
+            let gdvc = nvc.topViewController as? GraphDetailViewController
+        {
+
+            if traitCollection.horizontalSizeClass != UIUserInterfaceSizeClass.Compact
+            {
+                gdvc.navigationController?.setNavigationBarHidden(true, animated: false)
+                gdvc.view.backgroundColor = UIColor.clearColor()
+            }
+
+            var rect = graphView.scaleRect
+            rect.origin.y = -rect.origin.y
+            rect.size.height = -rect.size.height
+            gdvc.scaleRect = rect
+            gdvc.majorDivisionScale = Double(graphView.majorDivisionScale)
+            gdvc.minorDivisionScale = Double(graphView.minorDivisionScale)
         }
     }
 }
