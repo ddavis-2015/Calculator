@@ -26,10 +26,10 @@ class CalculatorViewController: UIViewController
         {
             if let value = newValue
             {
-                let formatter = NSNumberFormatter()
-                formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
+                let formatter = NumberFormatter()
+                formatter.numberStyle = NumberFormatter.Style.decimal
                 formatter.maximumFractionDigits = 6
-                displayLabel.text = formatter.stringFromNumber(value)
+                displayLabel.text = formatter.string(from: NSNumber(value: value))
             }
             else
             {
@@ -37,7 +37,7 @@ class CalculatorViewController: UIViewController
                     attributes:
                     [
                         NSFontAttributeName: displayLabel.font,
-                        NSObliquenessAttributeName: NSNumber(double: 0.2)
+                        NSObliquenessAttributeName: NSNumber(value: 0.2)
                     ]
                 )
             }
@@ -46,7 +46,7 @@ class CalculatorViewController: UIViewController
 
     var digitsHolder: String = ""
 
-    @IBAction func functionPressed(sender: UIButton)
+    @IBAction func functionPressed(_ sender: UIButton)
     {
         let operation: Brain.Operation
 
@@ -71,7 +71,7 @@ class CalculatorViewController: UIViewController
         case "square root":
             operation = Brain.Operation.SquareRoot
         default:
-            print("unknown function:", sender.accessibilityLabel)
+            print("unknown function:", sender.accessibilityLabel!)
             return
         }
 
@@ -110,7 +110,7 @@ class CalculatorViewController: UIViewController
     func evaluate()
     {
         displayValue = brain.evaluate()
-        historyLabel.text = String(brain) + " ="
+        historyLabel.text = String(describing: brain) + " ="
     }
 
     func clearAll()
@@ -119,7 +119,7 @@ class CalculatorViewController: UIViewController
         brain.removeAllUserVars()
         displayValue = 0
         digitsHolder = "0"
-        historyLabel.text = String(brain)
+        historyLabel.text = String(describing: brain)
     }
 
     @IBAction func clearAllPressed()
@@ -131,7 +131,7 @@ class CalculatorViewController: UIViewController
     {
         if !digitsHolder.isEmpty
         {
-            digitsHolder.removeAtIndex(digitsHolder.endIndex.predecessor())
+            digitsHolder.removeLast(1)
             if !digitsHolder.isEmpty
             {
                 displayLabel.text = digitsHolder
@@ -150,7 +150,7 @@ class CalculatorViewController: UIViewController
 
     @IBAction func decimalPointPressed()
     {
-        if digitsHolder.containsString(".")
+        if digitsHolder.contains(".")
         {
             return
         }
@@ -169,13 +169,13 @@ class CalculatorViewController: UIViewController
             displayValue = value // normalize display
         }
         digitsHolder.removeAll()
-        historyLabel.text = String(brain)
+        historyLabel.text = String(describing: brain)
     }
 
-    @IBAction func digitPressed(sender: UIButton)
+    @IBAction func digitPressed(_ sender: UIButton)
     {
         let newDigit = String(sender.tag)
-        if digitsHolder.characters.first == "0" && !digitsHolder.containsString(".")
+        if digitsHolder.characters.first == "0" && !digitsHolder.contains(".")
         {
             digitsHolder.removeAll()
         }
@@ -202,9 +202,9 @@ class CalculatorViewController: UIViewController
 
     private func loadProgram()
     {
-        if let program = NSUserDefaults.standardUserDefaults().objectForKey(CalculatorViewController.PROGRAM_KEY_NAME)
+        if let program = UserDefaults.standard.object(forKey: CalculatorViewController.PROGRAM_KEY_NAME)
         {
-            brain.program = program
+            brain.program = program as Brain.PropertyList
             evaluate()
             if displayValue != nil
             {
@@ -215,22 +215,22 @@ class CalculatorViewController: UIViewController
 
     func saveProgram()
     {
-        NSUserDefaults.standardUserDefaults().setObject(
+        UserDefaults.standard.set(
             brain.program,
             forKey: CalculatorViewController.PROGRAM_KEY_NAME
         )
-        assert(NSUserDefaults.standardUserDefaults().synchronize(), "NSUserDefaults synchronize failed")
+        assert(UserDefaults.standard.synchronize(), "NSUserDefaults synchronize failed")
     }
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        if segue.identifier == "graph", let gvc = (segue.destinationViewController as? UINavigationController)?.topViewController as? GraphViewController
+        if segue.identifier == "graph", let gvc = (segue.destination as? UINavigationController)?.topViewController as? GraphViewController
         {
             gvc.program = brain.program
         }
     }
 
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
     {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     }

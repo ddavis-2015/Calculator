@@ -13,7 +13,7 @@ class GraphDetailViewController: UIViewController
 
     @IBOutlet weak var label: UILabel!
 
-    var scaleRect : CGRect = CGRectZero
+    var scaleRect : CGRect = CGRect.zero
     var majorDivisionScale : Double = 0
     var minorDivisionScale : Double = 0
 
@@ -30,16 +30,16 @@ class GraphDetailViewController: UIViewController
         // Dispose of any resources that can be recreated.
     }
 
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
     {
         var str : String = ""
-        str = str.stringByAppendingFormat("Scale X: %+8.2f to %+8.2f\n", scaleRect.minX, scaleRect.maxX)
-        str = str.stringByAppendingFormat("Scale Y: %+8.2f to %+8.2f\n", scaleRect.minY, scaleRect.maxY)
+        str = str.appendingFormat("Scale X: %+8.2f to %+8.2f\n", scaleRect.minX, scaleRect.maxX)
+        str = str.appendingFormat("Scale Y: %+8.2f to %+8.2f\n", scaleRect.minY, scaleRect.maxY)
         str += "\n"
-        str = str.stringByAppendingFormat("Units/Major Div.: %6.2f\n", majorDivisionScale)
-        str = str.stringByAppendingFormat("Units/Minor Div.: %6.2f", minorDivisionScale)
+        str = str.appendingFormat("Units/Major Div.: %6.2f\n", majorDivisionScale)
+        str = str.appendingFormat("Units/Minor Div.: %6.2f", minorDivisionScale)
         label.text = str
         label.sizeToFit()
-        preferredContentSize = CGSizeMake(label.bounds.width + 10, label.bounds.height + 10)
+        preferredContentSize = CGSize(width: label.bounds.width + 10, height: label.bounds.height + 10)
     }
 }

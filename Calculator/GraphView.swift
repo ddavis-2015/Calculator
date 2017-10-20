@@ -19,15 +19,15 @@ class GraphView: UIView
 {
     // Only override drawRect: if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect)
+    override func draw(_ rect: CGRect)
     {
         // Drawing code
-        super.drawRect(rect)
+        super.draw(rect)
 
         let xIncr = scaleRect.width / bounds.width
         let yIncr = scaleRect.height / bounds.height
 
-        var originInView = CGPointMake(origin.x / xIncr, origin.y / yIncr)
+        var originInView = CGPoint(x: origin.x / xIncr, y: origin.y / yIncr)
         originInView.x += bounds.midX
         originInView.y += bounds.midY
         drawAxes(originInViewCoords: originInView)
@@ -41,22 +41,24 @@ class GraphView: UIView
         var startOfLine = true
         let minX = bounds.minX
         let maxX = bounds.maxX
-        for var viewX = minX; viewX <= maxX; viewX += 1 / (contentScaleFactor * 2)
+        
+        for viewX in stride(from: minX, through: maxX, by: 1 / (self.contentScaleFactor * 2))
+        //for var viewX = minX; viewX <= maxX; viewX += 1 / (contentScaleFactor * 2)
         {
             let x = (viewX - originInView.x) * xIncr
-            if let y = dataSource!.yForX(Double(x)) where y.isNormal || y.isZero
+            if let y = dataSource!.yForX(x: Double(x)), y.isNormal || y.isZero
             {
                 let viewY = (CGFloat(-y) / yIncr) + originInView.y
-                let p = CGPointMake(viewX, viewY)
+                let p = CGPoint(x: viewX, y: viewY)
 
                 if startOfLine
                 {
-                    bp.moveToPoint(p)
+                    bp.move(to: p)
                     startOfLine = false
                 }
                 else
                 {
-                    bp.addLineToPoint(p)
+                    bp.addLine(to: p)
                 }
             }
             else
@@ -78,14 +80,14 @@ class GraphView: UIView
             if bounds.width > bounds.height
             {
                 let ratio = bounds.width / bounds.height
-                rect = CGRectMake(-scale * ratio, -scale, scale * 2 * ratio, scale * 2)
-                rect.offsetInPlace(dx: -origin.x, dy: -origin.y)
+                rect = CGRect(x: -scale * ratio, y: -scale, width: scale * 2 * ratio, height: scale * 2)
+                rect = rect.offsetBy(dx: -origin.x, dy: -origin.y)
             }
             else
             {
                 let ratio = bounds.height / bounds.width
-                rect = CGRectMake(-scale, -scale * ratio, scale * 2, scale * 2 * ratio)
-                rect.offsetInPlace(dx: -origin.x, dy: -origin.y)
+                rect = CGRect(x: -scale, y: -scale * ratio, width: scale * 2, height: scale * 2 * ratio)
+                rect = rect.offsetBy(dx: -origin.x, dy: -origin.y)
             }
             return rect
         }
@@ -110,7 +112,7 @@ class GraphView: UIView
     }
 
     // origin is in the infinite coordinate space
-    var origin : CGPoint = CGPointZero
+    var origin : CGPoint = CGPoint.zero
     {
         didSet
         {
@@ -125,7 +127,7 @@ class GraphView: UIView
         {
             if (majorDivisions & 1) == 0
             {
-                majorDivisions++
+                majorDivisions += 1
             }
             setNeedsDisplay()
         }
@@ -208,11 +210,11 @@ class GraphView: UIView
         }
 
         // path horizontal axis
-        bp.moveToPoint(CGPointMake(hStart, origin.y))
-        bp.addLineToPoint(CGPointMake(bounds.maxX, origin.y))
+        bp.move(to: CGPoint(x: hStart, y: origin.y))
+        bp.addLine(to: CGPoint(x: bounds.maxX, y: origin.y))
         // path vertical axis
-        bp.moveToPoint(CGPointMake(origin.x, vStart))
-        bp.addLineToPoint(CGPointMake(origin.x, bounds.maxY))
+        bp.move(to: CGPoint(x: origin.x, y: vStart))
+        bp.addLine(to: CGPoint(x: origin.x, y: bounds.maxY))
 
         let lineWidth : CGFloat = 1
         let majorDivLineLength = 10 + lineWidth
@@ -221,17 +223,18 @@ class GraphView: UIView
         var minorDivPoint : CGPoint
 
         // path major/minor horizontal divisions
-        majorDivPoint = CGPointMake(hStart, origin.y - (majorDivLineLength / 2))
-        minorDivPoint = CGPointMake(hStart + minorDivIncr, origin.y - (minorDivLineLength / 2))
+        majorDivPoint = CGPoint(x: hStart, y: origin.y - (majorDivLineLength / 2))
+        minorDivPoint = CGPoint(x: hStart + minorDivIncr, y: origin.y - (minorDivLineLength / 2))
         while majorDivPoint.x <= bounds.maxX
         {
-            bp.moveToPoint(majorDivPoint)
-            bp.addLineToPoint(CGPointMake(majorDivPoint.x, majorDivPoint.y + majorDivLineLength))
+            bp.move(to: majorDivPoint)
+            bp.addLine(to: CGPoint(x: majorDivPoint.x, y: majorDivPoint.y + majorDivLineLength))
 
-            for var index : UInt = 0; index < minorDivisions; index++
+            for _ in 0 ..< minorDivisions
+            //for var index : UInt = 0; index < minorDivisions; index++
             {
-                bp.moveToPoint(minorDivPoint)
-                bp.addLineToPoint(CGPointMake(minorDivPoint.x, minorDivPoint.y + minorDivLineLength))
+                bp.move(to: minorDivPoint)
+                bp.addLine(to: CGPoint(x: minorDivPoint.x, y: minorDivPoint.y + minorDivLineLength))
                 minorDivPoint.x += minorDivIncr
             }
             majorDivPoint.x += majorDivIncr
@@ -239,17 +242,17 @@ class GraphView: UIView
         }
 
         // path major/minor vertical divisions
-        majorDivPoint = CGPointMake(origin.x - (majorDivLineLength / 2), vStart)
-        minorDivPoint = CGPointMake(origin.x - (minorDivLineLength / 2), vStart + minorDivIncr)
+        majorDivPoint = CGPoint(x: origin.x - (majorDivLineLength / 2), y: vStart)
+        minorDivPoint = CGPoint(x: origin.x - (minorDivLineLength / 2), y: vStart + minorDivIncr)
         while majorDivPoint.y <= bounds.maxY
         {
-            bp.moveToPoint(majorDivPoint)
-            bp.addLineToPoint(CGPointMake(majorDivPoint.x + majorDivLineLength, majorDivPoint.y))
+            bp.move(to: majorDivPoint)
+            bp.addLine(to: CGPoint(x: majorDivPoint.x + majorDivLineLength, y: majorDivPoint.y))
 
-            for var index : UInt = 0; index < minorDivisions; index++
+            for _ in 0 ..< minorDivisions
             {
-                bp.moveToPoint(minorDivPoint)
-                bp.addLineToPoint(CGPointMake(minorDivPoint.x + minorDivLineLength, minorDivPoint.y))
+                bp.move(to: minorDivPoint)
+                bp.addLine(to: CGPoint(x: minorDivPoint.x + minorDivLineLength, y: minorDivPoint.y))
                 minorDivPoint.y += minorDivIncr
             }
             majorDivPoint.y += majorDivIncr

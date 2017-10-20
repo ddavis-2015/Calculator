@@ -19,10 +19,13 @@ private func <= (lhs: Brain.StackOp.Precedence, rhs: Brain.StackOp.Precedence) -
     return lhs.value <= rhs.value
 }
 
-infix operator <!= {}
+infix operator <!=
 private func <!= (lhs: Brain.StackOp.Precedence, rhs: Brain.StackOp.Precedence) -> Bool
 {
-    if case .Binary(let lhsValue) = lhs, .Binary(let rhsValue) = rhs where lhsValue != rhsValue
+    //
+    // A fancy way of testing lhs.value != rhs.value
+    //
+    if case .Binary(let lhsValue) = lhs, case .Binary(let rhsValue) = rhs, lhsValue != rhsValue
     {
         return true
     }
@@ -73,7 +76,7 @@ class Brain : CustomStringConvertible
         }
     }
 
-    private enum StackOp : CustomStringConvertible
+    fileprivate enum StackOp : CustomStringConvertible
     {
         case Binary(Operation, (Double, Double) -> Double)
         case Unary(Operation, (Double) -> Double)
@@ -103,11 +106,11 @@ class Brain : CustomStringConvertible
             case .Operand(let operand):
                 return String(operand)
             case .Constant(let operation, _):
-                return String(operation)
-            case.Binary(let operation, _):
-                return String(operation)
+                return String(describing: operation)
+            case .Binary(let operation, _):
+                return String(describing: operation)
             case .Unary(let operation, _):
-                return String(operation)
+                return String(describing: operation)
             case .Variable(let name):
                 return name
             }
@@ -169,7 +172,7 @@ class Brain : CustomStringConvertible
 
     init()
     {
-        func addOp(op: StackOp)
+        func addOp(_ op: StackOp)
         {
             self.knownOps[op.operation()!] = op
         }
@@ -181,7 +184,7 @@ class Brain : CustomStringConvertible
         addOp(.Unary(.SquareRoot, sqrt))
         addOp(.Unary(.Cosine, cos))
         addOp(.Unary(.Sine, sin))
-        addOp(.Constant(.Pi, M_PI))
+        addOp(.Constant(.Pi, Double.pi))
         addOp(.Unary(.Negation, { -$0 } ))
     }
 
@@ -190,7 +193,7 @@ class Brain : CustomStringConvertible
         //print("stack:", opStack)
     }
 
-    private func evaluate3(inout stack: [StackOp], _ singleVariant: Double?) -> Double?
+    private func evaluate3(_ stack: inout [StackOp], _ singleVariant: Double?) -> Double?
     {
         guard let op = stack.popLast() else
         {
@@ -209,7 +212,7 @@ class Brain : CustomStringConvertible
                 return functor(operand)
             }
         case .Binary(_, let functor):
-            if let rightOperand = evaluate3(&stack, singleVariant), leftOperand = evaluate3(&stack, singleVariant)
+            if let rightOperand = evaluate3(&stack, singleVariant), let leftOperand = evaluate3(&stack, singleVariant)
             {
                 return functor(leftOperand, rightOperand)
             }
@@ -227,17 +230,17 @@ class Brain : CustomStringConvertible
         return nil
     }
 
-    private lazy var formatter : NSNumberFormatter =
+    private lazy var formatter : NumberFormatter =
     {
-        let f = NSNumberFormatter()
-        f.numberStyle = NSNumberFormatterStyle.DecimalStyle
+        let f = NumberFormatter()
+        f.numberStyle = NumberFormatter.Style.decimal
         f.maximumFractionDigits = 6
         return f
     }()
 
-    private func evaluate2(var stack: [StackOp]) -> (expr: String, stack: [StackOp], precedence: StackOp.Precedence)
+    private func evaluate2(_ stack: [StackOp]) -> (expr: String, stack: [StackOp], precedence: StackOp.Precedence)
     {
-
+        var stack = stack
         guard let op = stack.popLast() else
         {
             return ("?", stack, StackOp.Precedence.Operand(0))
@@ -246,10 +249,10 @@ class Brain : CustomStringConvertible
         switch op
         {
         case .Operand(let operand):
-            return (formatter.stringFromNumber(operand)!, stack, op.precedence)
+            return (formatter.string(from: NSNumber(value: operand))!, stack, op.precedence)
 
         case .Constant(let operation, _):
-            return (String(operation), stack, op.precedence)
+            return (String(describing: operation), stack, op.precedence)
 
         case .Unary(let operation, _):
             var (expr, stack, operandPrecedence) = evaluate2(stack)
@@ -258,7 +261,7 @@ class Brain : CustomStringConvertible
             {
                 expr = "(" + expr + ")"
             }
-            return (String(operation) + expr, stack, precedence)
+            return (String(describing: operation) + expr, stack, precedence)
 
         case .Binary(let operation, _):
             var (rightOperand, stack1, rightPrecedence) = evaluate2(stack)
@@ -272,7 +275,7 @@ class Brain : CustomStringConvertible
             {
                 leftOperand = "(" + leftOperand + ")"
             }
-            let expr = [leftOperand, String(operation), rightOperand].joinWithSeparator(" ")
+            let expr = [leftOperand, String(describing: operation), rightOperand].joined(separator: " ")
             return (expr, stack2, precedence)
 
         case .Variable(let name):
@@ -280,7 +283,7 @@ class Brain : CustomStringConvertible
         }
     }
 
-    func evaluate(singleVariant: Double? = nil) -> Double?
+    func evaluate(_ singleVariant: Double? = nil) -> Double?
     {
         var copy = opStack
         let result = evaluate3(&copy, singleVariant)
@@ -289,7 +292,7 @@ class Brain : CustomStringConvertible
         return result
     }
 
-    func pushOperation(operation: Operation)
+    func pushOperation(_ operation: Operation)
     {
         if let newOp = knownOps[operation]
         {
@@ -298,13 +301,13 @@ class Brain : CustomStringConvertible
         showStack()
     }
 
-    func pushOperand(operand: Double)
+    func pushOperand(_ operand: Double)
     {
         opStack.append(.Operand(operand))
         showStack()
     }
 
-    func pushOperand(operand: String)
+    func pushOperand(_ operand: String)
     {
         opStack.append(.Variable(operand))
         showStack()
@@ -330,7 +333,7 @@ class Brain : CustomStringConvertible
 
     func popTop()
     {
-        opStack.popLast()
+        _ = opStack.popLast()
         showStack()
     }
 
@@ -383,7 +386,7 @@ class Brain : CustomStringConvertible
         get
         {
             let propList = NSMutableDictionary()
-            propList.setObject(userVars, forKey: Brain.userVarsName)
+            propList.setObject(userVars, forKey: Brain.userVarsName as NSCopying)
 
             let stack = NSMutableArray()
             for op in opStack
@@ -391,21 +394,21 @@ class Brain : CustomStringConvertible
                 switch op
                 {
                 case .Operand(let value):
-                    stack.addObject([Brain.operandName : String(value)])
+                    stack.add([Brain.operandName : String(value)])
                 case .Variable(let name):
-                    stack.addObject([Brain.variableName : name])
+                    stack.add([Brain.variableName : name])
                 default:
-                    if let operation = op.operation(), name = Brain.operationNames[operation]
+                    if let operation = op.operation(), let name = Brain.operationNames[operation]
                     {
-                        stack.addObject([Brain.operationName : name])
+                        stack.add([Brain.operationName : name])
                     }
                     else
                     {
-                        print("program: unknown StackOp:", String(op))
+                        print("program: unknown StackOp:", String(describing: op))
                     }
                 }
             }
-            propList.setObject(stack, forKey: Brain.stackName)
+            propList.setObject(stack, forKey: Brain.stackName as NSCopying)
 
             return propList
         }
@@ -419,12 +422,12 @@ class Brain : CustomStringConvertible
             }
             guard let vars = propList[Brain.userVarsName] as? [String : Double] else
             {
-                print("program: invalid property \(Brain.userVarsName): \(propList[Brain.userVarsName])")
+                print("program: invalid property \(Brain.userVarsName): \(String(describing: propList[Brain.userVarsName]))")
                 return
             }
             guard let stack = propList[Brain.stackName] as? [[String : String]] else
             {
-                print("program: invalid property \(Brain.stackName): \(propList[Brain.stackName])")
+                print("program: invalid property \(Brain.stackName): \(String(describing: propList[Brain.stackName]))")
                 return
             }
 
@@ -463,7 +466,7 @@ class Brain : CustomStringConvertible
                             }
                             else
                             {
-                                print("program: unknown stackOp: \(String(operation))")
+                                print("program: unknown stackOp: \(String(describing: operation))")
                                 return
                             }
                         }

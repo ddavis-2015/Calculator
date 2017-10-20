@@ -26,11 +26,11 @@ class GraphViewController: UIViewController, GraphViewDataSource, UIPopoverPrese
         // Dispose of any resources that can be recreated.
     }
 
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-        self.title = String(brain).componentsSeparatedByString(", ").last
+        self.title = String(describing: brain).components(separatedBy: ", ").last
     }
 
     private let brain = Brain()
@@ -68,11 +68,12 @@ class GraphViewController: UIViewController, GraphViewDataSource, UIPopoverPrese
         }
         let dx = graphView.bounds.width / (graphView.scale * 2 * xRatio)
         let dy = graphView.bounds.height / (graphView.scale * 2 * yRatio)
-        return CGVectorMake(dx, dy)
+        return CGVector(dx: dx, dy: dy)
     }
 
-    private func viewPositionToGraphOrigin(var position: CGPoint) -> CGPoint
+    private func viewPositionToGraphOrigin(position: CGPoint) -> CGPoint
     {
+        var position = position
         position.x -= graphView.bounds.midX
         position.y -= graphView.bounds.midY
         let scaleVector = self.scaleVector
@@ -81,13 +82,13 @@ class GraphViewController: UIViewController, GraphViewDataSource, UIPopoverPrese
         return position
     }
 
-    @IBAction func pinchAction(sender: UIPinchGestureRecognizer)
+    @IBAction func pinchAction(_ sender: UIPinchGestureRecognizer)
     {
         switch sender.state
         {
-        case .Began:
+        case .began:
             fallthrough
-        case .Changed:
+        case .changed:
             if graphView.scale <= 1
             {
                 var scale = graphView.scale
@@ -107,40 +108,40 @@ class GraphViewController: UIViewController, GraphViewDataSource, UIPopoverPrese
         }
     }
 
-    @IBAction func tapAction(sender: UITapGestureRecognizer)
+    @IBAction func tapAction(_ sender: UITapGestureRecognizer)
     {
         switch sender.state
         {
-        case .Ended:
-            graphView.origin = viewPositionToGraphOrigin(sender.locationInView(graphView))
+        case .ended:
+            graphView.origin = viewPositionToGraphOrigin(position: sender.location(in: graphView))
         default:
             break
         }
     }
 
-    @IBAction func panAction(sender: UIPanGestureRecognizer)
+    @IBAction func panAction(_ sender: UIPanGestureRecognizer)
     {
         switch sender.state
         {
-        case .Began:
+        case .began:
             fallthrough
-        case .Changed:
-            var newPosition = sender.translationInView(graphView)
+        case .changed:
+            var newPosition = sender.translation(in: graphView)
             let scaleVector = self.scaleVector
             newPosition.x /= scaleVector.dx
             newPosition.y /= scaleVector.dy
             let origin = graphView.origin
-            graphView.origin = CGPointMake(origin.x + newPosition.x, origin.y + newPosition.y)
-            sender.setTranslation(CGPointZero, inView: graphView)
+            graphView.origin = CGPoint(x: origin.x + newPosition.x, y: origin.y + newPosition.y)
+            sender.setTranslation(CGPoint.zero, in: graphView)
         default:
             break
         }
     }
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         if segue.identifier == "graph detail",
-            let gdvc = segue.destinationViewController as? GraphDetailViewController
+            let gdvc = segue.destination as? GraphDetailViewController
         {
             gdvc.popoverPresentationController?.delegate = self
 
@@ -155,7 +156,7 @@ class GraphViewController: UIViewController, GraphViewDataSource, UIPopoverPrese
 
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle
     {
-        return UIModalPresentationStyle.None
+        return UIModalPresentationStyle.none
     }
 }
 

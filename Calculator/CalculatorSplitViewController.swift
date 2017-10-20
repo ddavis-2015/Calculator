@@ -27,7 +27,7 @@ class CalculatorSplitViewController: UISplitViewController, UISplitViewControlle
 
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool
     {
-        if splitViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.Compact
+        if splitViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.compact
         {
             return true
         }
