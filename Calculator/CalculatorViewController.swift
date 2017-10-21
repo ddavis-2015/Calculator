@@ -36,8 +36,8 @@ class CalculatorViewController: UIViewController
                 displayLabel.attributedText = NSAttributedString(string: "Error\t",
                     attributes:
                     [
-                        NSFontAttributeName: displayLabel.font,
-                        NSObliquenessAttributeName: NSNumber(value: 0.2)
+                        NSAttributedStringKey.font: displayLabel.font,
+                        NSAttributedStringKey.obliqueness: NSNumber(value: 0.2)
                     ]
                 )
             }

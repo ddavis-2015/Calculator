@@ -154,7 +154,7 @@ class GraphViewController: UIViewController, GraphViewDataSource, UIPopoverPrese
         }
     }
 
-    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle
     {
         return UIModalPresentationStyle.none
     }

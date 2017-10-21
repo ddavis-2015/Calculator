@@ -25,7 +25,7 @@ class CalculatorSplitViewController: UISplitViewController, UISplitViewControlle
         // Dispose of any resources that can be recreated.
     }
 
-    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool
+    func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool
     {
         if splitViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.compact
         {
