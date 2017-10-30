@@ -89,10 +89,10 @@ class GraphViewController: UIViewController, GraphViewDataSource, UIPopoverPrese
         case .began:
             fallthrough
         case .changed:
-            if graphView.scale <= 1
+            if graphView.scale < 1
             {
                 var scale = graphView.scale
-                scale *= sender.velocity < 0 ? 1.25 : 0.8
+                scale *= sender.velocity < 0 ? 1.05 : 0.95
                 if scale > 1
                 {
                     scale = ceil(scale)
@@ -101,7 +101,7 @@ class GraphViewController: UIViewController, GraphViewDataSource, UIPopoverPrese
             }
             else
             {
-                graphView.scale += sender.velocity < 0 ? 1 : -1
+                graphView.scale *= sender.velocity < 0 ? 1.05 : 0.95
             }
         default:
             break
