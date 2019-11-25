@@ -175,7 +175,7 @@ class CalculatorViewController: UIViewController
     @IBAction func digitPressed(_ sender: UIButton)
     {
         let newDigit = String(sender.tag)
-        if digitsHolder.characters.first == "0" && !digitsHolder.contains(".")
+        if digitsHolder.starts(with: "0") && !digitsHolder.contains(".")
         {
             digitsHolder.removeAll()
         }
